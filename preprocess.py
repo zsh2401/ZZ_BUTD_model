@@ -24,7 +24,10 @@ def extract_imgs_feat():
             h5py.File(os.path.join(opt.out_feats_dir, '%s_att.h5' % opt.dataset_name)) as file_att:
         try:
             for img_nm in tqdm.tqdm(imgs, ncols=100):
-                img = skimage.io.imread(os.path.join(opt.imgs_dir, img_nm))
+                p = os.path.join(opt.imgs_dir, img_nm)
+                # print(opt.imgs_dir)
+                # print("+++++"+ img_nm + "+++++++")
+                img = skimage.io.imread(p)
                 with torch.no_grad():
                     img = encoder.preprocess(img)
                     img = img.to(opt.device)
@@ -70,12 +73,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--dataset_name', type=str, default='coco')
-    parser.add_argument('--imgs_dir', type=str, default='./data/images/')
+    parser.add_argument('--imgs_dir', type=str, default='./data/images')
     parser.add_argument('--resnet101_file', type=str,
                         default='./data/pre_models/resnet101.pth')
     parser.add_argument('--out_feats_dir', type=str, default='./data/features/')
 
-    parser.add_argument('--dataset_coco', type=str, default='../../dataset/caption/coco/dataset_coco.json')
+    parser.add_argument('--dataset_coco', type=str, default='./data/caption/coco/dataset_coco.json')
     parser.add_argument('--out_captions', type=str, default='./data/captions/captions.json')
     parser.add_argument('--out_idx2word', type=str, default='./data/captions/idx2word.json')
     parser.add_argument('--out_annotation', type=str, default='./data/captions/annotation.json')
