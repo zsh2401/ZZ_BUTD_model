@@ -10,7 +10,7 @@
 启动train.py 3分钟后运行内存占用 3771MB，出门上英语课去了。
 CPU占用在600%到1000%之间（大概6-10个核心）
 
-2024年3月13日，13：38，
+### 2024年3月13日，13：38，
 CPU占用在70%左右（一个核心都没占满）。
 显存占用依然在3.7G左右，显卡功耗114W。
 我想，是否可以通过提高batchsize，与使用data_parallel提升训练速度呢？在尝试后，以失败告终。
@@ -33,3 +33,27 @@ train_loss: 2.6833, train_reward: 0.0000, val_loss: 2.4799
  EPOCH6起，采用128batchsize
 
  我决定在EPOCH2训练结束后，继续训练，但提升到batch_size到64，这大概能填满显存。
+
+ EPOCH 6结果：train_loss: 2.2618, train_reward: 0.0000, val_loss: 2.2575
+
+准备睡觉，让它慢慢练一晚上吧。
+
+### 2024/3/14 下午
+EPOCH 13结果：train_loss: 2.3001, train_reward: 0.0000, val_loss: 2.2166
+
+训练一晚上，没有复现结果，怎么回事？数据预处理出现问题了吗？还是说要再等上更多EPOCH呢？
+没有更多的训练时间了。
+
+### 2024/3/14 21:49
+在xe的EPOCH 13后，专为使用lr微调模式,此时loss为2.2180。
+命令为
+```sh
+python train.py --resume checkpoint/xe/model_10_2.2180_0314-2123.pth --train_mode rl --learning_rate 4e-5  --batch_size 128
+```
+祈祷LOSS能有显著下降。
+
+
+### 2024/3/20 22:13
+在经过十次lr训练后，性能似乎不错了。
+文件是model_10_4.3917_0315-1911.pth
+使用该模型进行推理，基本上还挺靠谱。
