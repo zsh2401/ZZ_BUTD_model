@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import torchvision
 from torchvision.models.resnet import Bottleneck
 import numpy as np
-
+from models.optimization import AoA
 
 class ResNet(torchvision.models.resnet.ResNet):
     def __init__(self, block, layers, num_classes=1000):
@@ -25,6 +25,7 @@ class Encoder(nn.Module):
         self.transforms = torchvision.transforms.Compose([
             torchvision.transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
+        self.aoa = AoA()
 
     def preprocess(self, image):
         if len(image.shape) == 2:
@@ -52,4 +53,10 @@ class Encoder(nn.Module):
         fc = x.mean(3).mean(2).squeeze()
         att = F.adaptive_avg_pool2d(x, [att_size, att_size]).squeeze().permute(1, 2, 0)
 
+        # 实验
+        att = self.aoa(att)
+        print(att)
+        print(att.shape)
+        raise "Stop"
+    
         return fc, att
