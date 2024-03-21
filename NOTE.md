@@ -57,3 +57,15 @@ python train.py --resume checkpoint/xe/model_10_2.2180_0314-2123.pth --train_mod
 在经过十次lr训练后，性能似乎不错了。
 文件是model_10_4.3917_0315-1911.pth
 使用该模型进行推理，基本上还挺靠谱。
+
+
+
+### 2024/3/22 00:22
+在完成了对Encoder的修改后，开始重新考虑训练。
+采用的命令为，即采用原版encoder预处理的数据。
+```sh
+python train.py --fc_feats data/features_vanilla/coco_fc.h5 --att_feats ./data/features_vanilla/coco_att.h5 --captions ./data/captions_vanilla/captions.json --idx2word ./data/captions_vanilla/idx2word.json
+```
+batch_size为默认值20,lr为默认值4e-4，显存占用3621，一个epoch大概需要5小时左右。
+
+考虑先这么练着吧。

@@ -7,23 +7,30 @@ class AoA(nn.Module):
     
     def __init__(self):
         super(AoA, self).__init__()
-        self.mha = MultiHeadAttention(2048,2048,2048,100,8,0.5)
+        self.mha = MultiHeadAttention(2048,2048,2048,2048,8,0.5)
+        self.l = nn.Linear(4096,2048)
         
     def __concat(self,Q,V):
-        return torch.concat(Q,V,2)
+        return torch.concat([Q,V],2)
     
-    def forward(self, att):
+    def forward(self, A):
+        Q = A
+        K = A
+        V= A
         
-        Q = att
-        V = self.mha(att,att,att,None)
+        V_ = self.mha(Q,K,V,None)
+    
+        C = self.__concat(Q,V_)
         
-        X = self.__concat(Q,V)
-        G = torch.sigmoid(X)
-        I = G * X
-        M = torch.tanh(I)
-        R = M * X
+        G = torch.sigmoid(self.l(C))
+        I = self.l(C)
         
-        return R
+        I_ = G * I
+        
+        M = torch.tanh(I_)
+        R = M * I
+        
+        return R + A
         
 
 #@save

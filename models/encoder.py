@@ -54,9 +54,9 @@ class Encoder(nn.Module):
         att = F.adaptive_avg_pool2d(x, [att_size, att_size]).squeeze().permute(1, 2, 0)
 
         # 实验
+        # print("original shape" + str(att.shape))
         att = self.aoa(att)
-        print(att)
-        print(att.shape)
-        raise "Stop"
-    
+        # print(att)
+        # print("aoa shape" + str(att.shape))
+        
         return fc, att
